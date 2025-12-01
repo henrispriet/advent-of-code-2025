@@ -14,5 +14,6 @@ pkgs.mkShell {
     cabal-install
     ghc
     haskell-language-server
+    ormolu
   ];
 }
