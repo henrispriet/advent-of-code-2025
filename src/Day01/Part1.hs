@@ -34,7 +34,7 @@ parseMove _ = error "invalid move"
 -- Algorithm
 
 doMove :: Int -> Int -> Int
-doMove pos move = (pos + move + 100) `mod` 100
+doMove pos move = (pos + move) `mod` 100
 
 updateState :: (Int, Int) -> Int -> (Int, Int)
 updateState (rotations, pos) move =
