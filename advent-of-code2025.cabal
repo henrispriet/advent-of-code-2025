@@ -79,3 +79,20 @@ executable advent-of-code2025
 
     -- Base language which the package is written in.
     default-language: GHC2024
+
+test-suite my-test-suite
+    import:           warnings
+
+    type: exitcode-stdio-1.0
+
+    main-is: Test.hs
+
+    other-modules:
+        Template
+        Day01.Part1 Day01.Part2
+
+    hs-source-dirs: src
+
+    build-depends:    base ^>=4.20.2.0, HUnit
+
+    default-language: GHC2024
