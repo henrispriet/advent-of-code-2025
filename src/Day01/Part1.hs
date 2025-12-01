@@ -2,8 +2,8 @@ module Day01.Part1 where
 
 -- import Debug.Trace
 
-solve :: IO ()
-solve = do
+run :: IO ()
+run = do
   input <- readFile "inputs/day01-part1.txt"
   let parsed = parse input
   let solution = algo parsed

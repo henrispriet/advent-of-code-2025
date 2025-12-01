@@ -4,8 +4,8 @@ import Day01.Part1 ({-testInput,-} parse, updateState)
 
 -- import Debug.Trace
 
-solve :: IO ()
-solve = do
+run :: IO ()
+run = do
   input <- readFile "inputs/day01-part1.txt"
   -- let input = testInput
   let parsed = parse input
