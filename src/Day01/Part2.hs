@@ -1,6 +1,6 @@
 module Day01.Part2 where
 
-import Day01.Part1 ({-testInput,-} parse)
+import Day01.Part1 ({-testInput,-} parse, updateState)
 
 -- import Debug.Trace
 
@@ -13,10 +13,6 @@ solve = do
   print solution
 
 -- Algorithm
-
--- idem part 1 but ensures 0 <= output < 100
-doMove' :: Int -> Int -> Int
-doMove' pos move = (((pos + move) `mod` 100) + 100) `mod` 100
 
 remainderTillZero :: Int -> Int -> Int
 remainderTillZero pos direction
@@ -36,22 +32,12 @@ partitionMove pos move = do
     else
       (remainder, move - remainder)
 
--- idem part 1 but uses doMove'
-updateState' :: (Int, Int) -> Int -> (Int, Int)
-updateState' (rotations, pos) move = do
-  let newPos = doMove' pos move
-  if newPos == 0
-    then
-      (rotations + 1, newPos)
-    else
-      (rotations, newPos)
-
 updateStateInParts :: (Int, Int) -> Int -> (Int, Int)
 updateStateInParts state 0 = state
 updateStateInParts state move = do
   let pos = snd state
   let (part, remainder) = partitionMove pos move
-  let newState = updateState' state part
+  let newState = updateState state part
   updateStateInParts newState remainder
 
 calcMoves :: [Int] -> (Int, Int)
