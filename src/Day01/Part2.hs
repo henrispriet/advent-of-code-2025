@@ -40,8 +40,5 @@ updateStateInParts state move = do
   let newState = updateState state part
   updateStateInParts newState remainder
 
-calcMoves :: [Int] -> (Int, Int)
-calcMoves = foldl updateStateInParts (0, 50)
-
 algo :: [Int] -> Int
-algo = fst . calcMoves
+algo = fst . foldl updateStateInParts (0, 50)

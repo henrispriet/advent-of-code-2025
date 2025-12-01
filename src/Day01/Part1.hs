@@ -46,8 +46,5 @@ updateState (rotations, pos) move = do
     else
       (rotations, newPos)
 
-calcMoves :: [Int] -> (Int, Int)
-calcMoves = foldl updateState (0, 50)
-
 algo :: [Int] -> Int
-algo = fst . calcMoves
+algo = fst . foldl updateState (0, 50)
