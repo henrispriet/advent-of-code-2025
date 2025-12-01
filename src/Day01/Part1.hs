@@ -38,13 +38,13 @@ doMove :: Int -> Int -> Int
 doMove pos move = (pos + move) `mod` 100
 
 updateState :: (Int, Int) -> Int -> (Int, Int)
-updateState (rotations, pos) move =
+updateState (rotations, pos) move = do
   let newPos = doMove pos move
-   in if newPos == 0
-        then
-          (rotations + 1, newPos)
-        else
-          (rotations, newPos)
+  if newPos == 0
+    then
+      (rotations + 1, newPos)
+    else
+      (rotations, newPos)
 
 calcMoves :: [Int] -> (Int, Int)
 calcMoves = foldl updateState (0, 50)

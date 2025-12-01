@@ -28,31 +28,31 @@ remainderTillZero pos direction
 
 partitionMove :: Int -> Int -> (Int, Int)
 partitionMove _ 0 = (0, 0)
-partitionMove pos move =
+partitionMove pos move = do
   let remainder = remainderTillZero pos move
-   in if abs move <= abs remainder
-        then
-          (move, 0)
-        else
-          (remainder, move - remainder)
+  if abs move <= abs remainder
+    then
+      (move, 0)
+    else
+      (remainder, move - remainder)
 
 -- idem part 1 but uses doMove'
 updateState' :: (Int, Int) -> Int -> (Int, Int)
-updateState' (rotations, pos) move =
+updateState' (rotations, pos) move = do
   let newPos = doMove' pos move
-   in if newPos == 0
-        then
-          (rotations + 1, newPos)
-        else
-          (rotations, newPos)
+  if newPos == 0
+    then
+      (rotations + 1, newPos)
+    else
+      (rotations, newPos)
 
 updateStateInParts :: (Int, Int) -> Int -> (Int, Int)
 updateStateInParts state 0 = state
-updateStateInParts state move =
+updateStateInParts state move = do
   let pos = snd state
-   in let (part, remainder) = partitionMove pos move
-       in let newState = updateState' state part
-           in updateStateInParts newState remainder
+  let (part, remainder) = partitionMove pos move
+  let newState = updateState' state part
+  updateStateInParts newState remainder
 
 calcMoves :: [Int] -> (Int, Int)
 calcMoves = foldl updateStateInParts (0, 50)
