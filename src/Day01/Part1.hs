@@ -3,11 +3,11 @@ module Day01.Part1 where
 -- import Debug.Trace
 
 solve :: IO ()
-solve =
-    let
-        parsed = parse testInput
-        solved = algo parsed
-    in print solved
+solve = do
+    input <- readFile "inputs/day01-part1.txt"
+    let parsed = parse input
+    let solution = algo parsed
+    print solution
 
 testInput :: String
 testInput = "L68\n\
@@ -24,7 +24,7 @@ testInput = "L68\n\
 -- Parser
 
 parse :: String -> [Int]
-parse input = map parseMove $ lines input
+parse input = map parseMove $ filter (/= "") $ lines input
 
 parseMove :: String -> Int
 parseMove ('R':n) = read n
