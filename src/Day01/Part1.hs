@@ -3,7 +3,35 @@ module Day01.Part1 where
 -- import Debug.Trace
 
 solve :: IO ()
-solve = print $ calcPassword [50, 3, -4, 1, -6]
+solve =
+    let
+        parsed = parse testInput
+        solved = algo parsed
+    in print solved
+
+testInput :: String
+testInput = "L68\n\
+\L30\n\
+\R48\n\
+\L5\n\
+\R60\n\
+\L55\n\
+\L1\n\
+\L99\n\
+\R14\n\
+\L82"
+
+-- Parser
+
+parse :: String -> [Int]
+parse input = map parseMove $ lines input
+
+parseMove :: String -> Int
+parseMove ('R':n) = read n
+parseMove ('L':n) = - (read n)
+parseMove _ = error "invalid move"
+
+-- Algorithm
 
 doMove :: Int -> Int -> Int
 doMove pos move = (pos + move + 100) `mod` 100
@@ -21,5 +49,5 @@ updateState (rotations, pos) move =
 calcMoves :: [Int] -> (Int, Int)
 calcMoves = foldl updateState (0, 50)
 
-calcPassword :: [Int] -> Int
-calcPassword = fst . calcMoves
+algo :: [Int] -> Int
+algo = fst . calcMoves
