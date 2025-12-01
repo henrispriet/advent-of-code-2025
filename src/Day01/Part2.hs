@@ -1,16 +1,16 @@
 module Day01.Part2 where
 
-import Day01.Part1 ({-testInput,-} parse, updateState)
+import Day01.Part1 ({-testInput,-} parse, updateState, Problem, Solution)
 
 -- import Debug.Trace
 
-run :: IO ()
+run :: IO String
 run = do
   input <- readFile "inputs/day01-part1.txt"
   -- let input = testInput
   let parsed = parse input
-  let solution = algo parsed
-  print solution
+  let solved = solve parsed
+  return $ show solved
 
 -- Algorithm
 
@@ -40,5 +40,5 @@ updateStateInParts state move = do
   let newState = updateState state part
   updateStateInParts newState remainder
 
-algo :: [Int] -> Int
-algo = fst . foldl updateStateInParts (0, 50)
+solve :: Problem -> Solution
+solve = fst . foldl updateStateInParts (0, 50)

@@ -2,12 +2,12 @@ module Day01.Part1 where
 
 -- import Debug.Trace
 
-run :: IO ()
+run :: IO String
 run = do
   input <- readFile "inputs/day01-part1.txt"
   let parsed = parse input
-  let solution = algo parsed
-  print solution
+  let solved = solve parsed
+  return $ show solved
 
 testInput :: String
 testInput =
@@ -22,9 +22,12 @@ testInput =
   \R14\n\
   \L82"
 
+type Problem = [Int]
+type Solution = Int
+
 -- Parser
 
-parse :: String -> [Int]
+parse :: String -> Problem
 parse input = map parseMove $ filter (/= "") $ lines input
 
 parseMove :: String -> Int
@@ -46,5 +49,5 @@ updateState (rotations, pos) move = do
     else
       (rotations, newPos)
 
-algo :: [Int] -> Int
-algo = fst . foldl updateState (0, 50)
+solve :: Problem -> Solution
+solve = fst . foldl updateState (0, 50)
