@@ -46,19 +46,30 @@ parseRange str = do
 numDigits :: Int -> Int
 numDigits num = floorFloat $ logBase 10.0 (int2Float num) + 1
 
-genInvalidIds :: Int -> [Int]
-genInvalidIds digits
-  | even digits =
-      let e = digits `div` 2
-       in map (* (10 ^ e + 1)) $ range (10 ^ (e - 1), 10 ^ e - 1)
-  | odd digits = []
-  | otherwise = error "int must be even or odd"
+-- digits must be multiple of repetitions for this function to give a useful result!!
+genKey :: Int -> Int -> Int
+genKey repetitions digits = do
+  let expNumerators = range (0, repetitions - 1)
+  let expFrac n = digits `div` repetitions * n
+  sum $ map (\n -> 10 ^ expFrac n) expNumerators
+
+-- digits must be multiple of repetitions for this function to give a useful result!!
+genRange :: Int -> Int -> [Int]
+genRange repetitions digits = do
+  let e = digits `div` repetitions
+  range (10 ^ (e - 1), 10 ^ e - 1)
+
+genInvalidIds :: Int -> Int -> [Int]
+genInvalidIds repetitions digits
+  | digits `mod` repetitions == 0 =
+      map (* genKey repetitions digits) $ genRange repetitions digits
+  | otherwise = []
 
 genInvalidIdsInRange :: (Int, Int) -> [Int]
 genInvalidIdsInRange (begin, end) = do
   let inNumRange = inRange (begin, end)
   let digitRange = range (numDigits begin, numDigits end)
-  concatMap (filter inNumRange . genInvalidIds) digitRange
+  concatMap (filter inNumRange . genInvalidIds 2) digitRange
 
 solve :: Problem -> Solution
 solve = sum . concatMap genInvalidIdsInRange
