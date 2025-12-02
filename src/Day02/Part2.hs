@@ -2,14 +2,14 @@ module Day02.Part2 where
 
 import Data.Ix
 import Data.List
-import Day02.Part1 (testInput, numDigits, parse, genInvalidIds)
+import Day02.Part1 ({-testInput,-} numDigits, parse, genInvalidIds)
 
 -- import Debug.Trace
 
 run :: IO String
 run = do
-  -- input <- readFile "inputs/day02-part1.txt"
-  let input = testInput
+  input <- readFile "inputs/day02-part1.txt"
+  -- let input = testInput
   let parsed = parse input
   -- print parsed
   let solved = solve parsed
