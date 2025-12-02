@@ -89,8 +89,9 @@ test-suite my-test-suite
     main-is: Test.hs
 
     other-modules:
-        Template
-        Day01.Part1 Day01.Part2
+        -- Template
+        -- Day01.Part1 Day01.Part2
+        -- Day02.Part1
 
     hs-source-dirs: src
 

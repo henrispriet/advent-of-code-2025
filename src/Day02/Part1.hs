@@ -2,13 +2,12 @@ module Day02.Part1 where
 
 import Data.Ix
 import GHC.Float
-
 -- import Debug.Trace
 
 run :: IO String
 run = do
-  -- input <- readFile "inputs/dayxx-partx.txt"
-  let input = testInput
+  input <- readFile "inputs/day02-part1.txt"
+  -- let input = testInput
   let parsed = parse input
   -- print parsed
   let solved = solve parsed
@@ -43,19 +42,19 @@ parseRange str = do
 
 -- Algorithm
 
-calcExp :: Int -> Int
-calcExp num = ceilingFloat $ logBase 10.0 (int2Float num) / 2
+numDigits :: Int -> Int
+numDigits num = floorFloat $ logBase 10.0 (int2Float num) + 1
 
-calcNDigits :: Int -> Int
-calcNDigits num = floorFloat $ logBase 10.0 (int2Float num)
+genInvalidIds :: Int -> [Int]
+genInvalidIds digits
+  | even digits =
+      let e = digits `div` 2
+       in map (* (10 ^ e + 1)) $ range (10 ^ (e - 1), 10 ^ e - 1)
+  | odd digits = []
+  | otherwise = error "int must be even or odd"
 
-getInvalidIds :: (Int, Int) -> [Int]
-getInvalidIds (begin, end) = do
-  -- TODO: better name for  e and d
-  let e = calcExp begin
-  let d = 10 ^ e
-  let toCheck = map (* (d + 1)) $ range (begin `div` d, end `div` d)
-  filter (\x -> inRange (begin, end) x && calcExp x == e) toCheck
+genInvalidIdsInRange :: (Int, Int) -> [Int]
+genInvalidIdsInRange (begin, end) = filter (inRange (begin, end)) $ concatMap genInvalidIds $ range (numDigits begin, numDigits end)
 
 solve :: Problem -> Solution
-solve p = sum $ concatMap getInvalidIds p
+solve = sum . concatMap genInvalidIdsInRange
