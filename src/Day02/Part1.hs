@@ -2,6 +2,7 @@ module Day02.Part1 where
 
 import Data.Ix
 import GHC.Float
+
 -- import Debug.Trace
 
 run :: IO String
@@ -54,7 +55,10 @@ genInvalidIds digits
   | otherwise = error "int must be even or odd"
 
 genInvalidIdsInRange :: (Int, Int) -> [Int]
-genInvalidIdsInRange (begin, end) = filter (inRange (begin, end)) $ concatMap genInvalidIds $ range (numDigits begin, numDigits end)
+genInvalidIdsInRange (begin, end) = do
+  let inNumRange = inRange (begin, end)
+  let digitRange = range (numDigits begin, numDigits end)
+  concatMap (filter inNumRange . genInvalidIds) digitRange
 
 solve :: Problem -> Solution
 solve = sum . concatMap genInvalidIdsInRange
