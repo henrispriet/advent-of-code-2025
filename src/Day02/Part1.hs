@@ -1,5 +1,8 @@
 module Day02.Part1 where
 
+import Data.Ix
+import GHC.Float
+
 -- import Debug.Trace
 
 run :: IO String
@@ -7,7 +10,7 @@ run = do
   -- input <- readFile "inputs/dayxx-partx.txt"
   let input = testInput
   let parsed = parse input
-  print parsed
+  -- print parsed
   let solved = solve parsed
   return $ show solved
 
@@ -21,7 +24,7 @@ type Solution = Int
 -- Parser
 
 parse :: String -> Problem
-parse = map parseRange . split (==',')
+parse = map parseRange . split (== ',')
 
 -- see https://stackoverflow.com/a/4981265
 split :: (Char -> Bool) -> String -> [String]
@@ -32,13 +35,27 @@ split p s = case dropWhile p s of
       (w, s'') = break p s'
 
 parseRange :: String -> (Int, Int)
-parseRange range = do
-  let list = split (=='-') range
+parseRange str = do
+  let list = split (== '-') str
   let begin = head list
   let end = last list
   (read begin, read end)
 
 -- Algorithm
 
+calcExp :: Int -> Int
+calcExp num = ceilingFloat $ logBase 10.0 (int2Float num) / 2
+
+calcNDigits :: Int -> Int
+calcNDigits num = floorFloat $ logBase 10.0 (int2Float num)
+
+getInvalidIds :: (Int, Int) -> [Int]
+getInvalidIds (begin, end) = do
+  -- TODO: better name for  e and d
+  let e = calcExp begin
+  let d = 10 ^ e
+  let toCheck = map (* (d + 1)) $ range (begin `div` d, end `div` d)
+  filter (\x -> inRange (begin, end) x && calcExp x == e) toCheck
+
 solve :: Problem -> Solution
-solve = error "unimplemented"
+solve p = sum $ concatMap getInvalidIds p
