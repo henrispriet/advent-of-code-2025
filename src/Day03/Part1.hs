@@ -43,7 +43,7 @@ argmaximum :: Ord a => [a] -> Int
 argmaximum list = fst $ maximumBy' (compare `on` snd) $ zip [0..] list
 
 allButLast :: Int -> [a] -> [a]
-allButLast n list = take (length list - n) list
+allButLast n = reverse . drop n . reverse
 
 getHighestJolt :: Int -> [Int] -> Int
 getHighestJolt 0 _ = 0
