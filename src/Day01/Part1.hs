@@ -23,6 +23,7 @@ testInput =
   \L82"
 
 type Problem = [Int]
+
 type Solution = Int
 
 -- Parser

@@ -1,6 +1,6 @@
 module Day01.Part2 where
 
-import Day01.Part1 ({-testInput,-} parse, updateState, Problem, Solution)
+import Day01.Part1 ({-testInput,-} Problem, Solution, parse, updateState)
 
 -- import Debug.Trace
 

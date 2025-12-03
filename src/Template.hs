@@ -11,11 +11,11 @@ run = do
   let solved = solve parsed
   return $ show solved
 
-
 testInput :: String
 testInput = "1"
 
 type Problem = Int
+
 type Solution = Int
 
 -- Parser

@@ -1,11 +1,10 @@
-import Test.HUnit
-import System.IO.Unsafe
-
-import Template
 import Day01.Part1
 import Day01.Part2
 import Day02.Part1
 import Day02.Part2
+import System.IO.Unsafe
+import Template
+import Test.HUnit
 
 main :: IO ()
 main = do
@@ -13,13 +12,14 @@ main = do
   return ()
 
 tests :: Test
-tests = TestList [
-    TestLabel "day01part1" day01part1,
-    TestLabel "day01part2" day01part2,
-    TestLabel "day02part1" day02part1,
-    TestLabel "day02part2" day02part2,
-    TestLabel "template" template
-  ]
+tests =
+  TestList
+    [ TestLabel "day01part1" day01part1,
+      TestLabel "day01part2" day01part2,
+      TestLabel "day02part1" day02part1,
+      TestLabel "day02part2" day02part2,
+      TestLabel "template" template
+    ]
 
 template :: Test
 template = TestCase (assertEqual "template" "1" (unsafePerformIO Template.run))
