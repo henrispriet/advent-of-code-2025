@@ -35,8 +35,12 @@ parseLine = map $ read . singleton
 
 -- Algorithm
 
-argmaximum :: (Ord a) => [a] -> Int
-argmaximum list = maximumBy (compare `on` genericIndex list) [0 .. length list - 1]
+-- necessary because Data.List.maximumBy chooses the rightmost element as a tiebreak
+maximumBy' :: (a -> a -> Ordering) -> [a] -> a
+maximumBy' f = maximumBy f . reverse
+
+argmaximum :: Ord a => [a] -> Int
+argmaximum list = fst $ maximumBy' (compare `on` snd) $ zip [0..] list
 
 getHighestJolt :: [Int] -> Int
 getHighestJolt list = do
