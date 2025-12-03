@@ -42,13 +42,16 @@ maximumBy' f = maximumBy f . reverse
 argmaximum :: Ord a => [a] -> Int
 argmaximum list = fst $ maximumBy' (compare `on` snd) $ zip [0..] list
 
-getHighestJolt :: [Int] -> Int
-getHighestJolt list = do
-  let len = length list
-  let firstDigitIndex = argmaximum $ take (len - 1) list
-  let secondDigitIndex' = argmaximum $ drop (firstDigitIndex + 1) list
-  let secondDigitIndex = firstDigitIndex + 1 + secondDigitIndex'
-  (list !! firstDigitIndex) * 10 + (list !! secondDigitIndex)
+allButLast :: Int -> [a] -> [a]
+allButLast n list = take (length list - n) list
+
+getHighestJolt :: Int -> [Int] -> Int
+getHighestJolt 0 _ = 0
+getHighestJolt nBatteries list = do
+  let n = nBatteries - 1
+  let currDigitIndex = argmaximum $ allButLast n list
+  let digit = list !! currDigitIndex
+  digit * 10 ^ n + getHighestJolt (nBatteries - 1) (drop (currDigitIndex + 1) list)
 
 solve :: Problem -> Solution
-solve = sum . map getHighestJolt
+solve = sum . map (getHighestJolt 2)
