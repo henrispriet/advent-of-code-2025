@@ -1,5 +1,6 @@
 module Day03.Part1 where
 
+import Data.Function
 import Data.List
 
 -- import Debug.Trace
@@ -9,15 +10,16 @@ run = do
   -- input <- readFile "inputs/dayxx-partx.txt"
   let input = testInput
   let parsed = parse input
-  print parsed
+  -- print parsed
   let solved = solve parsed
   return $ show solved
 
 testInput :: String
-testInput = "987654321111111\n\
-\811111111111119\n\
-\234234234234278\n\
-\818181911112111"
+testInput =
+  "987654321111111\n\
+  \811111111111119\n\
+  \234234234234278\n\
+  \818181911112111"
 
 type Problem = [[Int]]
 
@@ -33,5 +35,16 @@ parseLine = map $ read . singleton
 
 -- Algorithm
 
+argmaximum :: (Ord a) => [a] -> Int
+argmaximum list = maximumBy (compare `on` genericIndex list) [0 .. length list - 1]
+
+getHighestJolt :: [Int] -> Int
+getHighestJolt list = do
+  let len = length list
+  let firstDigitIndex = argmaximum $ take (len - 1) list
+  let secondDigitIndex' = argmaximum $ drop (firstDigitIndex + 1) list
+  let secondDigitIndex = firstDigitIndex + 1 + secondDigitIndex'
+  (list !! firstDigitIndex) * 10 + (list !! secondDigitIndex)
+
 solve :: Problem -> Solution
-solve = error "not implemented"
+solve = sum . map getHighestJolt
