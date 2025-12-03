@@ -7,8 +7,8 @@ import Data.List
 
 run :: IO String
 run = do
-  -- input <- readFile "inputs/dayxx-partx.txt"
-  let input = testInput
+  input <- readFile "inputs/day03-part1.txt"
+  -- let input = testInput
   let parsed = parse input
   -- print parsed
   let solved = solve parsed
@@ -28,7 +28,7 @@ type Solution = Int
 -- Parser
 
 parse :: String -> Problem
-parse = map parseLine . lines
+parse = map parseLine . filter (/= "") . lines
 
 parseLine :: String -> [Int]
 parseLine = map $ read . singleton
