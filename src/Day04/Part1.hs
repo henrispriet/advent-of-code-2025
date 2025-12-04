@@ -26,7 +26,7 @@ testInput =
   \.@@@@@@@@.\n\
   \@.@.@@@.@."
 
-type Problem = Array (Int, Int) Bool
+type Problem = Rolls
 
 type Solution = Int
 
@@ -47,31 +47,54 @@ toArray list = do
 
 -- Algorithm
 
-subArray :: (Ix j) => (j, j) -> Array j e -> Array j e
-subArray r = ixmap r id
+type Rolls = Array (Int, Int) Bool
 
-count :: (a -> Bool) -> [a] -> Int
-count f = length . filter f
+type Neighbours = Array (Int, Int) (Maybe Int)
 
-nRolls :: Array i Bool -> Int
-nRolls = count id . elems
+type Idx = (Int, Int)
 
-applyKernel :: Array (Int, Int) Bool -> (Int, Int) -> Int
-applyKernel arr pos = do
-  let (i, j) = pos
-  let r = ((i - 1, j - 1), (i + 1, j + 1))
-  let window = subArray r $ arr // [(pos, False)]
-  nRolls window
+type Bounds = (Idx, Idx)
 
-reachable :: Array (Int, Int) Bool -> [(Int, Int)]
-reachable arr = do
+offset :: Idx -> Idx -> Idx
+offset (a1, b1) (a2, b2) = (a1 + a2, b1 + b2)
+
+offsetArr :: Idx -> Array Idx a -> Array Idx a
+offsetArr o arr = ixmap (bounds arr) (offset o) arr
+
+subArr :: Bounds -> Array Idx a -> Array Idx a
+subArr r = ixmap r id
+
+-- NOTE: kernel must have odd width and height!
+-- NOTE: arr must already have been expaned to fit kernel!
+applyKernel :: (a -> b -> c) -> Array Idx a -> Array Idx b -> Idx -> Array Idx c
+applyKernel f kernel arr pivot = do
+  let (kb1, kb2) = bounds kernel
+  let windowBounds = (offset pivot kb1, offset pivot kb2)
+  let window = subArr windowBounds arr
+  listArray (bounds window) [f k a | (k, a) <- zip (elems kernel) (elems window)]
+
+neighboursKernel :: Array Idx Bool
+neighboursKernel = listArray ((-1, -1), (1, 1)) (repeat True) // [((0, 0), False)]
+
+overlay :: Array Idx a -> Array Idx a -> Array Idx a
+overlay base over = base // assocs over
+
+calcNeighbours :: Rolls -> Neighbours
+calcNeighbours arr = do
   let ((i1, j1), (i2, j2)) = bounds arr
   let expandedBounds = ((i1 - 1, j1 - 1), (i2 + 1, j2 + 1))
   let zeros = listArray expandedBounds $ repeat False
-  let expanded = zeros // assocs arr
-  let rollIndeces = map fst . filter snd $ assocs arr
-  let nNeighbours = zip rollIndeces (map (applyKernel expanded) rollIndeces)
-  map fst . filter ((<4) . snd) $ nNeighbours
+  let expanded = overlay zeros arr
+  let applyNeighboursKernel = applyKernel (&&) neighboursKernel expanded
+  let calcNumNeighbours = length . filter id . elems . applyNeighboursKernel
+  let rollIndices = [i | (i, b) <- assocs arr, b]
+  listArray (bounds arr) (repeat Nothing) // [(i, Just $ calcNumNeighbours i) | i <- rollIndices]
+
+reachable :: Rolls -> [Idx]
+reachable arr = [i | (i, Just n) <- assocs $ calcNeighbours arr, n < 4]
+
+nRolls :: Rolls -> Int
+nRolls = length . filter id . elems
 
 solve :: Problem -> Solution
-solve = length . reachable
+solve = length . filter (maybe False (< 4)) . elems . calcNeighbours
