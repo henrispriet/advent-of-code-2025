@@ -1,14 +1,14 @@
 module Day04.Part2 where
 
 import GHC.Arr
-import Day04.Part1 (testInput, parse, reachable, nRolls)
+import Day04.Part1 ({-testInput,-} parse, reachable, nRolls)
 
 -- import Debug.Trace
 
 run :: IO String
 run = do
-  -- input <- readFile "inputs/day04-part1.txt"
-  let input = testInput
+  input <- readFile "inputs/day04-part1.txt"
+  -- let input = testInput
   let parsed = parse input
   -- print parsed
   let solved = solve parsed

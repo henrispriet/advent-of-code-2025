@@ -5,6 +5,7 @@ import Day02.Part2
 import Day03.Part1
 import Day03.Part2
 import Day04.Part1
+import Day04.Part2
 import System.IO.Unsafe
 import Template
 import Test.HUnit
@@ -24,6 +25,7 @@ tests =
       TestLabel "day03part1" day03part1,
       TestLabel "day03part2" day03part2,
       TestLabel "day04part1" day04part1,
+      TestLabel "day04part2" day04part2,
       TestLabel "template" template
     ]
 
@@ -50,3 +52,6 @@ day03part2 = TestCase (assertEqual "day03part2" "173685428989126" (unsafePerform
 
 day04part1 :: Test
 day04part1 = TestCase (assertEqual "day04part1" "1602" (unsafePerformIO Day04.Part1.run))
+
+day04part2 :: Test
+day04part2 = TestCase (assertEqual "day04part2" "9518" (unsafePerformIO Day04.Part2.run))
