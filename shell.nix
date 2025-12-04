@@ -15,5 +15,9 @@ pkgs.mkShell {
     ghc
     haskell-language-server
     ormolu
+
+    # flamegraph
+    perf
+    haskellPackages.ghc-prof-flamegraph
   ];
 }
