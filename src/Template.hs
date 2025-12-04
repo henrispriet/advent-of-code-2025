@@ -8,6 +8,7 @@ run = do
   -- input <- readFile "inputs/dayxx-partx.txt"
   let input = testInput
   let parsed = parse input
+  -- print parsed
   let solved = solve parsed
   return $ show solved
 
@@ -27,3 +28,4 @@ parse = read
 
 solve :: Problem -> Solution
 solve = id
+-- solve = error "unimplented"
