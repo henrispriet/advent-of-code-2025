@@ -79,12 +79,16 @@ neighboursKernel = listArray ((-1, -1), (1, 1)) (repeat True) // [((0, 0), False
 overlay :: Array Idx a -> Array Idx a -> Array Idx a
 overlay base over = base // assocs over
 
+expand :: Int -> a -> Array Idx a -> Array Idx a
+expand width defaultValue arr = do
+  let ((i1, j1), (i2, j2)) = bounds arr
+  let expandedBounds = ((i1 - width, j1 - width), (i2 + width, j2 + width))
+  let zeros = listArray expandedBounds $ repeat defaultValue
+  overlay zeros arr
+
 calcNeighbours :: Rolls -> Neighbours
 calcNeighbours arr = do
-  let ((i1, j1), (i2, j2)) = bounds arr
-  let expandedBounds = ((i1 - 1, j1 - 1), (i2 + 1, j2 + 1))
-  let zeros = listArray expandedBounds $ repeat False
-  let expanded = overlay zeros arr
+  let expanded = expand 1 False arr
   let applyNeighboursKernel = applyKernel (&&) neighboursKernel expanded
   let calcNumNeighbours = length . filter id . elems . applyNeighboursKernel
   let rollIndices = [i | (i, b) <- assocs arr, b]
