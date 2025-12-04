@@ -6,8 +6,8 @@ import GHC.Arr
 
 run :: IO String
 run = do
-  -- input <- readFile "inputs/dayxx-partx.txt"
-  let input = testInput
+  input <- readFile "inputs/day04-part1.txt"
+  -- let input = testInput
   let parsed = parse input
   -- print parsed
   let solved = solve parsed
@@ -74,4 +74,4 @@ count :: (a -> Bool) -> [a] -> Int
 count f = length . filter f
 
 solve :: Problem -> Solution
-solve = count (<4) . numSurrounding
+solve = count (< 4) . numSurrounding
