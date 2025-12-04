@@ -42,8 +42,7 @@ toArray :: [[a]] -> Array (Int, Int) a
 toArray list = do
   let rows = length list
   let columns = length (head list)
-  let indeces = cartProd [1..rows] [1..columns]
-  array ((1,1), (rows,columns)) $ zip indeces $ concat list
+  listArray ((1,1), (rows,columns)) $ concat list
 
 -- see https://stackoverflow.com/a/4119758
 cartProd :: [a] -> [b] -> [(a,b)]
