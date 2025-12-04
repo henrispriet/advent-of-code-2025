@@ -45,10 +45,6 @@ toArray list = do
   let columns = length (head list)
   listArray ((1, 1), (rows, columns)) $ concat list
 
--- see https://stackoverflow.com/a/4119758
-cartProd :: [a] -> [b] -> [(a, b)]
-cartProd xs ys = [(x, y) | x <- xs, y <- ys]
-
 -- Algorithm
 
 subArray :: (Ix j) => (j, j) -> Array j e -> Array j e
