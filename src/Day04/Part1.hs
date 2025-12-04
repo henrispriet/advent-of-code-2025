@@ -50,24 +50,28 @@ toArray list = do
 subArray :: (Ix j) => (j, j) -> Array j e -> Array j e
 subArray r = ixmap r id
 
+count :: (a -> Bool) -> [a] -> Int
+count f = length . filter f
+
+nRolls :: Array i Bool -> Int
+nRolls = count id . elems
+
 applyKernel :: Array (Int, Int) Bool -> (Int, Int) -> Int
 applyKernel arr pos = do
   let (i, j) = pos
   let r = ((i - 1, j - 1), (i + 1, j + 1))
   let window = subArray r $ arr // [(pos, False)]
-  count id . elems $ window
+  nRolls window
 
-numSurrounding :: Array (Int, Int) Bool -> [Int]
-numSurrounding arr = do
+reachable :: Array (Int, Int) Bool -> [(Int, Int)]
+reachable arr = do
   let ((i1, j1), (i2, j2)) = bounds arr
   let expandedBounds = ((i1 - 1, j1 - 1), (i2 + 1, j2 + 1))
   let zeros = listArray expandedBounds $ repeat False
   let expanded = zeros // assocs arr
   let rollIndeces = map fst . filter snd $ assocs arr
-  map (applyKernel expanded) rollIndeces
-
-count :: (a -> Bool) -> [a] -> Int
-count f = length . filter f
+  let nNeighbours = zip rollIndeces (map (applyKernel expanded) rollIndeces)
+  map fst . filter ((<4) . snd) $ nNeighbours
 
 solve :: Problem -> Solution
-solve = count (< 4) . numSurrounding
+solve = length . reachable
