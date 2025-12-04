@@ -66,15 +66,15 @@ subArr r = ixmap r id
 
 -- NOTE: kernel must have odd width and height!
 -- NOTE: arr must already have been expaned to fit kernel!
-applyKernel :: (a -> b -> c) -> Array Idx a -> Array Idx b -> Idx -> Array Idx c
-applyKernel f kernel arr pivot = do
+applyKernel :: Array Idx (b -> c) -> Array Idx b -> Idx -> Array Idx c
+applyKernel kernel arr pivot = do
   let (kb1, kb2) = bounds kernel
   let windowBounds = (offset pivot kb1, offset pivot kb2)
   let window = subArr windowBounds arr
-  listArray (bounds window) [f k a | (k, a) <- zip (elems kernel) (elems window)]
+  listArray (bounds window) [f a | (f, a) <- zip (elems kernel) (elems window)]
 
-neighboursKernel :: Array Idx Bool
-neighboursKernel = listArray ((-1, -1), (1, 1)) (repeat True) // [((0, 0), False)]
+neighboursKernel :: Array Idx (Bool -> Bool)
+neighboursKernel = listArray ((-1, -1), (1, 1)) (repeat id) // [((0, 0), const False)]
 
 overlay :: Array Idx a -> Array Idx a -> Array Idx a
 overlay base over = base // assocs over
@@ -89,7 +89,7 @@ expand width defaultValue arr = do
 calcNeighbours :: Rolls -> Neighbours
 calcNeighbours arr = do
   let expanded = expand 1 False arr
-  let applyNeighboursKernel = applyKernel (&&) neighboursKernel expanded
+  let applyNeighboursKernel = applyKernel neighboursKernel expanded
   let calcNumNeighbours = length . filter id . elems . applyNeighboursKernel
   let rollIndices = [i | (i, b) <- assocs arr, b]
   listArray (bounds arr) (repeat Nothing) // [(i, Just $ calcNumNeighbours i) | i <- rollIndices]
