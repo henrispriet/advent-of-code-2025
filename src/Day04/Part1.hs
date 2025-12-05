@@ -58,20 +58,18 @@ type Bounds = (Idx, Idx)
 offset :: Idx -> Idx -> Idx
 offset (a1, b1) (a2, b2) = (a1 + a2, b1 + b2)
 
-offsetArr :: Idx -> Array Idx a -> Array Idx a
-offsetArr o arr = ixmap (bounds arr) (offset o) arr
+offsetBounds :: Bounds -> Idx -> Bounds
+offsetBounds (a, b) pivot = (a `offset` pivot, b `offset` pivot)
 
 subArr :: Bounds -> Array Idx a -> Array Idx a
 subArr r = ixmap r id
 
--- NOTE: kernel must have odd width and height!
 -- NOTE: arr must already have been expaned to fit kernel!
 applyKernel :: Array Idx (b -> c) -> Array Idx b -> Idx -> Array Idx c
 applyKernel kernel arr pivot = do
-  let (kb1, kb2) = bounds kernel
-  let windowBounds = (offset pivot kb1, offset pivot kb2)
+  let windowBounds = bounds kernel `offsetBounds` pivot
   let window = subArr windowBounds arr
-  listArray (bounds window) [f a | (f, a) <- zip (elems kernel) (elems window)]
+  listArray windowBounds [f a | (f, a) <- zip (elems kernel) (elems window)]
 
 neighboursKernel :: Array Idx (Bool -> Bool)
 neighboursKernel = listArray ((-1, -1), (1, 1)) (repeat id) // [((0, 0), const False)]
@@ -84,7 +82,7 @@ expand width defaultValue arr = do
   let ((i1, j1), (i2, j2)) = bounds arr
   let expandedBounds = ((i1 - width, j1 - width), (i2 + width, j2 + width))
   let zeros = listArray expandedBounds $ repeat defaultValue
-  overlay zeros arr
+  zeros `overlay` arr
 
 calcNeighbours :: Rolls -> Neighbours
 calcNeighbours arr = do
