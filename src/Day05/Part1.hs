@@ -1,16 +1,17 @@
 module Day05.Part1 where
 
 import Data.Bifunctor
+import Data.Ix
 import Day02.Part1 (parseRange)
 
 -- import Debug.Trace
 
 run :: IO String
 run = do
-  -- input <- readFile "inputs/day05part1.txt"
-  let input = testInput
+  input <- readFile "inputs/day05-part1.txt"
+  -- let input = testInput
   let parsed = parse input
-  print parsed
+  -- print parsed
   let solved = solve parsed
   return $ show solved
 
@@ -47,4 +48,4 @@ parseRanges = map parseRange
 -- Algorithm
 
 solve :: Problem -> Solution
-solve = error "unimplented"
+solve (ranges, ids) = length . filter (\i -> any (`inRange` i) ranges) $ ids
