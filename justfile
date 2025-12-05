@@ -20,7 +20,7 @@ new-part1 day:
 new-part2 day:
     cp src/Day{{day}}/Part1.hs src/Day{{day}}/Part2.hs
 
-    sed -re 's/(Day)..(\.Part)./\1{{day}}\22/' -i src/Day{{day}}/Part2.hs
+    sed -re 's/(Day){{day}}(\.Part)1/\1{{day}}\22/' -i src/Day{{day}}/Part2.hs
     sed -re 's/(Day)..(\.Part)./\1{{day}}\22/' -i src/Main.hs
 
 run:
