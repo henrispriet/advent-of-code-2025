@@ -13,7 +13,7 @@ new-part1 day:
     sed -re 's/-- (module Day)XX(\.Part)X/\1{{day}}\21/' -i src/Day{{day}}/Part1.hs
     sed 's/module Template.*//' -i src/Day{{day}}/Part1.hs
 
-    sed -re 's/(day)xx-(part)x(\.txt)/\1{{day}}\21\3/' -i src/Day{{day}}/Part1.hs
+    sed -re 's/(day)xx(-part)x(\.txt)/\1{{day}}\21\3/' -i src/Day{{day}}/Part1.hs
     sed -re 's/(Day)..(\.Part)./\1{{day}}\21/' -i src/Main.hs
 
 # make sure day has leading 0 if <10
