@@ -11,6 +11,8 @@ in
 }:
 pkgs.mkShell {
   packages = with pkgs; [
+    just
+
     cabal-install
     ghc
     haskell-language-server
